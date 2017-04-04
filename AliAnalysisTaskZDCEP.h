@@ -3,13 +3,19 @@
 
 #include "AliAnalysisTaskSE.h"
 #include "AliAnalysisUtils.h"
+#include "AliMultSelection.h"
 
 class AliAnalysisUtils;
 class AliAnalysisTaskSE;
+class AliMultSelection;
+class TProfile;
+class TProfile2D;
+class TProfile3D;
+class TH3D;
 
 class  AliAnalysisTaskZDCEP : public  AliAnalysisTaskSE
 {
- public:
+public:
   //  two  class  constructors
   AliAnalysisTaskZDCEP();
   AliAnalysisTaskZDCEP(const  char *name);
@@ -19,33 +25,40 @@ class  AliAnalysisTaskZDCEP : public  AliAnalysisTaskSE
   virtual void UserCreateOutputObjects();
   //  called  for  each  event
   virtual void UserExec(Option_t* option);
+  // get centrality bin
+  virtual Int_t GetCenBin(Double_t Centrality);
   //  called  at  end  of  analysis
   virtual void Terminate(Option_t* option);
   
   void SetZDCCalibList(TList* const wlist) {this->fZDCCalibList = wlist;}
   TList* GetZDCCalibList() const {return this->fZDCCalibList;}
+  void SetTowerEqList(TList* const wlist) {this->fTowerEqList = wlist;}
+  TList* GetTowerEqList() const {return this->fTowerEqList;}
   
- private:
+private:
   
   TList* fOutputList;             //! output list containing ZDC q-vectors
   TList* fHistList;               //! output list containing QA histograms
   Double_t fZDCGainAlpha;         //
-  Bool_t fUseMCTune;              //
-  TList *fZDCCalibList;           // list containing ZDC calibration
-  TProfile* fZDCQHist[8];         //!
+  TList *fZDCCalibList;           // list for ZDC Q-vector re-centering
+  TList *fTowerEqList;            // list for ZDC gain equalization
+  TProfile* fZDCQHist[4];         //!
+  TProfile3D* fZDCVtxHist[4];     //!
+  TProfile2D* fZDCEcomTotHist[4]; //!
+  TProfile3D* fZDCVtxCenHist[10][4]; //!
+  TH1D *fTowerGainEq[2][5];       //!
+  
   AliFlowVector* fZDCFlowVect[2]; //! ZDC q-vectors
   Int_t fCachedRunNum;            //
-  const static Int_t fnRun = 92;  //
+  const static Int_t fnRun = 90;  //
   Int_t fRunList[fnRun];          // run list
   TList *fQVecListRun[fnRun];     //! run-by-run list
-  
-  TProfile* fZDCQVecRaw[fnRun][4];       //! q_x,y distribution
-  TProfile* fZDCQVecRec[fnRun][4];       //! q_x,y distribution (after recentering)
-  TProfile* fZDCQVecRecHig[fnRun][4];    //! Higher harmonics terms (after recentering)
-  TH2F* fZDCEVPLRec[fnRun][2];           //! Event Plane (after recentering)
-  TH2F* fTH2PsiAPsiC;                    //! 
+  TArrayD fAvVtxPosX;             // average vx position vs run number
+  TArrayD fAvVtxPosY;             // average vy position vs run number
+  TArrayD fAvVtxPosZ;             // average vz position vs run number
   
   AliAnalysisUtils* fAnalysisUtils; //!
+  AliMultSelection* fMultSelection; //!
   
   ClassDef(AliAnalysisTaskZDCEP, 2);
 };
