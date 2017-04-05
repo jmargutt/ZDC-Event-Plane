@@ -427,12 +427,21 @@ void AliAnalysisTaskZDCEP::UserExec(Option_t *)
     printf("WARNING: no list provided for ZDC Q-vector re-centering ! \n");
   }
   
-  
   // save run number
   fCachedRunNum = RunNum;
   
   PostData(1, fOutputList);
   PostData(2, fHistList);
+}
+
+//=====================================================================
+
+void AliAnalysisTaskZDCEP::GetZDCQVectors(Double_t QAX, Double_t QAY, Double_t QCX, Double_t QCY)
+{
+  QAX = fZDCFlowVect[1]->X();
+  QAY = fZDCFlowVect[1]->Y();
+  QCX = fZDCFlowVect[0]->X();
+  QCY = fZDCFlowVect[0]->Y();
 }
 
 //=====================================================================
