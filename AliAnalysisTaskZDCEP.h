@@ -34,7 +34,7 @@ public:
   TList* GetZDCCalibList() const {return this->fZDCCalibList;}
   void SetTowerEqList(TList* const wlist) {this->fTowerEqList = wlist;}
   TList* GetTowerEqList() const {return this->fTowerEqList;}
-  void GetZDCQVectors(Double_t QAX, Double_t QAY, Double_t QCX, Double_t QCY)
+  void GetZDCQVectors(Double_t QAX, Double_t QAY, Double_t QCX, Double_t QCY);
   
 private:
   
