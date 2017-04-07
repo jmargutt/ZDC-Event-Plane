@@ -12,6 +12,7 @@ class TProfile;
 class TProfile2D;
 class TProfile3D;
 class TH3D;
+class AliFlowEvent;
 
 class  AliAnalysisTaskZDCEP : public  AliAnalysisTaskSE
 {
@@ -57,11 +58,12 @@ private:
   TArrayD fAvVtxPosX;             // average vx position vs run number
   TArrayD fAvVtxPosY;             // average vy position vs run number
   TArrayD fAvVtxPosZ;             // average vz position vs run number
+  AliFlowEvent* fFlowEvent;       // flowevent
   
   AliAnalysisUtils* fAnalysisUtils; //!
   AliMultSelection* fMultSelection; //!
   
-  ClassDef(AliAnalysisTaskZDCEP, 2);
+  ClassDef(AliAnalysisTaskZDCEP,1);
 };
 
 #endif

@@ -2,26 +2,6 @@ AliAnalysisTask * AddTaskZDCEP(TString ZDCCalibFileName,
                                TString Label="",
                                const char* suffix="")
 {
-  // load libraries
-  gSystem->Load("libGeom");
-  gSystem->Load("libVMC");
-  gSystem->Load("libXMLIO");
-  gSystem->Load("libPhysics");
-  gSystem->Load("libCore.so");
-  gSystem->Load("libTree.so");
-  gSystem->Load("libSTEERBase.so");
-  gSystem->Load("libESD.so");
-  gSystem->Load("libAOD.so");
-  gSystem->Load("libANALYSIS.so");
-  gSystem->Load("libANALYSISalice.so");
-  gSystem->Load("libOADB.so");
-  gSystem->Load("libPWGflowBase.so");
-  gSystem->Load("libPWGflowTasks.so");
-  
-  gROOT->ProcessLine(".include $ALICE_ROOT/include");
-  gROOT->ProcessLine(".include $ALICE_PHYSICS/include");
-  gSystem->AddIncludePath("-I. -I$ROOTSYS/include -I$ALICE_ROOT -I$ALICE_ROOT/EMCAL -I$ALICE_ROOT/ANALYSIS -I$ALICE_ROOT/OCDB -I$ALICE_ROOT/STEER/macros -I$ALICE_ROOT/include -I$ALICE_ROOT/ITS -I$ALICE_ROOT/TPC -I$ALICE_ROOT/TRD -I$ALICE_ROOT/ZDC -I$ALICE_ROOT/macros -I$ALICE_PHYSICS -I$ALICE_PHYSICS/include -I$ALICE_PHYSICS/OADB $ALICE_PHYSICS/OADB/macros -I$ALICE_PHYSICS/PWGGA -I$ALICE_PHYSICS/PWGCF -I$ALICE_PHYSICS/PWGHF -I$ALICE_PHYSICS/TENDER -I$ALICE_PHYSICS/TENDER/Tender -I$ALICE_PHYSICS/TENDER/TenderSupplies -I$ALICE_PHYSICS/PARfiles -I$ALICE_PHYSICS/PWGCF/FLOW/macros I$ALICE_PHYSICS/PWGPP/ZDC -g ");
-  
   // the manager is static, so get the existing manager via the static method
   AliAnalysisManager *mgr = AliAnalysisManager::GetAnalysisManager();
   if (!mgr) {
@@ -42,7 +22,7 @@ AliAnalysisTask * AddTaskZDCEP(TString ZDCCalibFileName,
   AliAnalysisDataContainer *cinput = mgr->GetCommonInputContainer();
   
   // create the flow analysis tasks
-  TString AnalysisTaskName = "AnalysisTask";
+  TString AnalysisTaskName = "AnalysisTaskZDCEP";
   AnalysisTaskName += Label;
   AnalysisTaskName += suffix;
   AliAnalysisTaskZDCEP *taskZDC = new AliAnalysisTaskZDCEP(AnalysisTaskName);
@@ -78,21 +58,15 @@ AliAnalysisTask * AddTaskZDCEP(TString ZDCCalibFileName,
   // connect the task to the analysis manager
   mgr->AddTask(taskZDC);
   
-  // initialize output name
-  TString outputQC = file;
-  outputQC += Label;
-  outputQC += suffix;
-  outputQC += ".root";
-  // create and connect the output containers
-  AliAnalysisDataContainer *coutputQC = mgr->CreateContainer(outputQC.Data(),
-                                                             TList::Class(),
-                                                             AliAnalysisManager::kOutputContainer,
-                                                             outputQC);
-  // connect the output of the flow event task to the flow analysis task
-  mgr->ConnectInput(taskZDC, 0, cinput);
-  // and connect the output of the flow analysis task to the output container
-  // which will be written to the output file
-  mgr->ConnectOutput(taskZDC, 2, coutputQC);
+  // create a data container for the output of the flow event task
+  TString taskZDCEPname = "ZDCEPExchangeContainer";
+  AliAnalysisDataContainer *coutputFE = mgr->CreateContainer(taskZDCEPname,
+                                                             AliFlowEventSimple::Class(),
+                                                             AliAnalysisManager::kExchangeContainer);
+  // connect the input data to the flow event task
+  mgr->ConnectInput(taskZDC,0,cinput);
+  // and connect the output to the flow event task
+  mgr->ConnectOutput(taskZDC,1,coutputFE);
   
   return taskZDC;
 }

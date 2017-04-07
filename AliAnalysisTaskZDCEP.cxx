@@ -33,6 +33,7 @@
 #include "AliAODZDC.h"
 #include "TProfile2D.h"
 #include "TProfile3D.h"
+#include "AliFlowEvent.h"
 
 class TH1;
 class TH2;
@@ -58,7 +59,8 @@ fZDCCalibList(0x0),
 fTowerEqList(0x0),
 fCachedRunNum(0),
 fAnalysisUtils(0x0),
-fMultSelection(0x0)
+fMultSelection(0x0),
+fFlowEvent(NULL)
 {
   for(Int_t k=0; k<4; k++) {
     fZDCQHist[k] = NULL;
@@ -98,7 +100,8 @@ fZDCCalibList(0x0),
 fTowerEqList(0x0),
 fCachedRunNum(0),
 fAnalysisUtils(0x0),
-fMultSelection(0x0)
+fMultSelection(0x0),
+fFlowEvent(NULL)
 {
   for(Int_t k=0; k<4; k++) {
     fZDCQHist[k] = NULL;
@@ -126,9 +129,8 @@ fMultSelection(0x0)
   fAvVtxPosY=TArrayD(fnRun,dVtxPosY15o);
   fAvVtxPosZ=TArrayD(fnRun,dVtxPosZ15o);
   
-  DefineInput(0, TChain::Class());
-  DefineOutput(1, TList::Class());
-  DefineOutput(2, TList::Class());
+  DefineInput(0,TChain::Class());
+  DefineOutput(1,AliFlowEventSimple::Class());
 }
 
 //=====================================================================
@@ -138,6 +140,7 @@ AliAnalysisTaskZDCEP::~AliAnalysisTaskZDCEP()
   // Destructor
   delete fOutputList;
   delete fHistList;
+  delete fFlowEvent;
   if(fAnalysisUtils) delete fAnalysisUtils;
   if(fMultSelection) delete fMultSelection;
 }
@@ -181,9 +184,7 @@ void AliAnalysisTaskZDCEP::UserCreateOutputObjects ()
   fAnalysisUtils->SetUseMVPlpSelection(kTRUE);
   fAnalysisUtils->SetUseOutOfBunchPileUp(kTRUE);
   
-  //  add  the  list  to  our  output  file
-  PostData(1, fOutputList);
-  PostData(2, fHistList); //  recall  1 from  constructor
+  fFlowEvent = new AliFlowEvent(1);
 }
 
 //=====================================================================
@@ -427,11 +428,14 @@ void AliAnalysisTaskZDCEP::UserExec(Option_t *)
     printf("WARNING: no list provided for ZDC Q-vector re-centering ! \n");
   }
   
+  Double_t xyZNCfinal[2]={fZDCFlowVect[0]->X(),fZDCFlowVect[0]->Y()};
+  Double_t xyZNAfinal[2]={fZDCFlowVect[1]->X(),fZDCFlowVect[1]->Y()};
+  fFlowEvent->SetZDC2Qsub(xyZNCfinal,denZNC,xyZNAfinal,denZNA);
+  
   // save run number
   fCachedRunNum = RunNum;
   
-  PostData(1, fOutputList);
-  PostData(2, fHistList);
+  PostData(1, fFlowEvent);
 }
 
 //=====================================================================
