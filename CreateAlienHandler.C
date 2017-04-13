@@ -7,7 +7,7 @@ AliAnalysisGrid* CreateAlienHandler()
   AliAnalysisAlien *plugin = new AliAnalysisAlien();
   //plugin->SetUser("jmargutt");
   
-  plugin->AddIncludePath("-I. -I$ALICE_ROOT/include -I$ALICE_PHYSICS/include -g ");
+  plugin->AddIncludePath("-I. -I$ROOTSYS/include -I$ALICE_ROOT -I$ALICE_ROOT/EMCAL -I$ALICE_ROOT/ANALYSIS -I$ALICE_ROOT/PWGGA -I$ALICE_ROOT/PWGCF -I$ALICE_ROOT/PWGHF -I$ALICE_ROOT/PWGHF/hfe -I$ALICE_ROOT/CONTAINERS -I$ALICE_ROOT/STEER/STEER -I$ALICE_ROOT/STEER/STEERBase -I$ALICE_ROOT/STEER/ESD -I$ALICE_ROOT/STEER/AOD -I$ALICE_ROOT/OADB -I$ALICE_ROOT/PWGHF/base  -I$ALICE_ROOT/include -I$ALICE_ROOT/ITS -I$ALICE_ROOT/TPC -I$ALICE_ROOT/CONTAINERS -I$ALICE_ROOT/STEER -I$ALICE_ROOT/TRD -I$ALICE_ROOT/macros -I$ALICE_ROOT/ANALYSIS  -I$ALICE_ROOT/OADB -I$ALICE_ROOT/PWG/FLOW/Base -I$ALICE_PHYSICS/include -g ");
   
   // Declare all libraries (other than the default ones for the framework. These will be
   // loaded by the generated analysis macro. Add all extra files (task .cxx/.h) here.
@@ -26,7 +26,7 @@ AliAnalysisGrid* CreateAlienHandler()
   // plugin->SetROOTVersion("v5-34-08-6");
   // plugin->SetAliROOTVersion("vAN-20140714");
   // plugin->SetAliROOTVersion("v5-08-00-1");
-  plugin->SetAliPhysicsVersion("vAN-20170321-1");
+  plugin->SetAliPhysicsVersion("vAN-20170410-1");
   // Declare input data to be processed.
   // Define production directory LFN
   
@@ -34,7 +34,7 @@ AliAnalysisGrid* CreateAlienHandler()
   plugin->SetGridDataDir("/alice/data/2015/LHC15o");
   plugin->SetDataPattern("*/pass1/AOD/*AOD.root");
   plugin->SetRunPrefix("000");   // real data  // LHC10h, global quality = 1, TPC OK, #89 138275
-  Int_t runArray[] = {246989};//, 246991, 246989, 246984, 246982, 246980, 246948, 246945, 246928, 246851, 246847, 246846, 246845, 246844, 246810, 246809, 246808, 246807, 246805, 246804, 246766};//, 246765, 246763, 246760, 246759, 246758, 246757, 246751, 246750, 246495, 246493, 246488, 246487, 246434, 246431, 246428, 246424, 246276, 246275, 246272, 246271, 246225, 246222, 246217, 246185, 246182, 246181, 246180, 246178, 246153, 246152, 246151, 246115, 246113, 246089, 246087, 246053, 246052, 246049, 246048, 246042, 246037, 246036, 246012, 246003, 246001, 245954, 245952, 245949, 245923, 245833, 245831, 245829, 245705, 245702, 245700, 245692, 245683};
+  Int_t runArray[] = {246991};//, 246989, 246984, 246982, 246980, 246948, 246945, 246928, 246851, 246847, 246846, 246845, 246844, 246810, 246809};
   
   for (Int_t i = 0; i < sizeof(runArray); i++)
   {
@@ -50,7 +50,7 @@ AliAnalysisGrid* CreateAlienHandler()
   //plugin->SetGridWorkingDir("MC12_d_2030");
   //plugin->SetGridWorkingDir("MC12_e_3040");
   //plugin->SetGridWorkingDir("MC12_f_4050");
-  plugin->SetGridWorkingDir("test");
+  plugin->SetGridWorkingDir("ZDCEP");
   // Declare alien output directory. Relative to working directory.
   plugin->SetGridOutputDir("output"); // In this case will be $HOME/work/output
   // Declare the output file names separated by blancs (can be like: file.root or file.root@ALICE::Niham::File)
@@ -62,7 +62,7 @@ AliAnalysisGrid* CreateAlienHandler()
   // Optionally set a name for the generated analysis macro (default MyAnalysis.C)
   plugin->SetAnalysisMacro("MyAnalysis.C");
   // Optionally set maximum number of input files/subjob (default 100, put 0 to ignore)
-  plugin->SetSplitMaxInputFileNumber(100);
+  plugin->SetSplitMaxInputFileNumber(5);
   // Optionally modify the executable name (default analysis.sh)
   plugin->SetExecutable("analysis.sh");
   // Optionally set number of failed jobs that will trigger killing waiting sub-jobs.
@@ -82,7 +82,7 @@ AliAnalysisGrid* CreateAlienHandler()
   // Optionally keep log files
   plugin->SetKeepLogs(kTRUE);
   // Optionally set number of runs per masterjob:
-  plugin->SetNrunsPerMaster(1);
+  plugin->SetNrunsPerMaster(15);
   // ???
   plugin->SetMergeViaJDL(pre_final_stage);
   plugin->SetMaxMergeStages(2);

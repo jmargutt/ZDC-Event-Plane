@@ -17,9 +17,7 @@ void runGrid()
   gSystem->Load("libAOD");
   gSystem->Load("libANALYSIS");
   gSystem->Load("libANALYSISalice");
-  gSystem->Load("libANALYSISaliceBase");
-  gSystem->Load("libCORRFW");
-  gSystem->Load("libOADB");
+  gSystem->Load("libOADB.so");
   gSystem->Load("libPWGflowBase.so");
   gSystem->Load("libPWGflowTasks.so");
   gSystem->Load("libqpythia");
