@@ -31,13 +31,17 @@ AliAnalysisTask * AddTaskZDCEP(TString ZDCCalibFileName,
   // add list for ZDC towers gain equalization
   TString ZDCTowerEqFileName = "alien:///alice/cern.ch/user/j/jmargutt/15oHI_EZDCcalib.root";
   TFile* ZDCTowerEqFile = TFile::Open(ZDCTowerEqFileName,"READ");
+  if(!ZDCTowerEqFile) {
+    cout << "ERROR: ZDC tower equalisation: file not found!" << endl;
+    exit(1);
+  }
   gROOT->cd();
   TList* ZDCTowerEqList = (TList*)(ZDCTowerEqFile->FindObjectAny("EZNcalib"));
   if(ZDCTowerEqList) {
     taskZDC->SetTowerEqList(ZDCTowerEqList);
-    cout << "ZDCTowerEq set (from " <<  ZDCTowerEqFileName.Data() << ")" << endl;
+    cout << "ZDC tower equalisation: set! (from " <<  ZDCTowerEqFileName.Data() << ")" << endl;
   } else {
-    cout << "ERROR: ZDCTowerEqList not found!" << endl;
+    cout << "ERROR: ZDC tower equalisation: EZNcalib TList not found!" << endl;
     exit(1);
   }
   delete ZDCTowerEqFile;
@@ -45,13 +49,16 @@ AliAnalysisTask * AddTaskZDCEP(TString ZDCCalibFileName,
   // add list for ZDC Q-vector re-centering
   TFile* ZDCCalibFile = TFile::Open(ZDCCalibFileName,"READ");
   if(!ZDCCalibFile) {
-    cout << "ERROR: ZDC calibration not found!" << endl;
+    cout << "ERROR: ZDC Q-vector calibration: file not found!" << endl;
     exit(1);
   }
   TList* ZDCCalibList = dynamic_cast<TList*>(ZDCCalibFile->FindObjectAny("Q Vectors"));
   if(ZDCCalibList) {
     taskZDC->SetZDCCalibList(ZDCCalibList);
-    cout << "ZDC calibration set (from " <<  ZDCCalibFileName.Data() << ")" << endl;
+    cout << "ZDC Q-vector calibration: set! (from " <<  ZDCCalibFileName.Data() << ")" << endl;
+  } else {
+    cout << "ERROR: ZDC Q-vector calibration: Q Vectors TList not found!" << endl;
+    exit(1);
   }
   delete ZDCCalibFile;
   
